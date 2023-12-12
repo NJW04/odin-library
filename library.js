@@ -1,7 +1,6 @@
 const myLibrary = [];
 
 const bookContainer = document.querySelector(".book-container");
-const addButton = document.querySelector(".add-button");
 
 
 function Book(title,author,pages,readStatus){
@@ -34,7 +33,7 @@ function displayBooks(){
         authorText.textContent = "Author: " + curBook.author;
 
         const numPages = document.createElement('div');
-        numPages.textContent = "Number of Pages: " + curBook.numPages;
+        numPages.textContent = "Number of Pages: " + curBook.pages;
 
         const readStatus = document.createElement('div');
         readStatus.textContent = "Read Status: " + curBook.readStatus;
@@ -63,16 +62,49 @@ function displayBooks(){
 }
 
 const deleteButtons = document.querySelectorAll('.delete-btn');
-deleteButtons
 
 const allDeleteBtns = Array.from(document.querySelectorAll('.delete-btn'));
-for (const deleteBtn of allDeleteBtns) {
-  deleteBtn.addEventListener('click', (event) => {
-    
-  });
-}
+
+
+//Button to open book info form
+const dialog = document.querySelector("dialog");
+const form = document.querySelector("form")
+const addButton = document.querySelector('.add-button');
+addButton.addEventListener('click', () => {
+  form.reset();
+  dialog.showModal();
+})
+
+const exitButton = document.querySelector('#exit-button');
+exitButton.addEventListener('click', () =>{
+  dialog.close();
+})
+
+//Adding a book to library button
+const submitButton = document.querySelector("#submit-button");
+submitButton.addEventListener('click', (event) => {
+  event.preventDefault();
+  const titleInfo = document.querySelector("#title").value;
+  const authorInfo = document.querySelector("#author").value;
+  const numPages = document.querySelector("#num-pages").value;
+  let readStatus = "";
+  if (document.querySelector('#readYes').checked){
+    readStatus = "I have been read";
+  }else{
+    readStatus = "I have not been read";
+  }
+  const newBook = new Book(titleInfo,authorInfo,numPages,readStatus);
+  addBookToLibrary(newBook);
+  while (bookContainer.firstChild) {
+    bookContainer.removeChild(bookContainer.lastChild);
+  }
+  displayBooks();
+  dialog.close();
+  
+})
 
 window.onload = (event) => {
+    /*
     const book1 = new Book("Ant Farm Test", "Nathan Wells",100,"Read");
     const book2 = new Book("Pig Farm", "Jack Wells",150,"Read");
     const book3 = new Book("Dog Farm", "Heir Wells",10,"Not Read");
@@ -84,5 +116,5 @@ window.onload = (event) => {
     addBookToLibrary(book3);
     addBookToLibrary(book4);
     addBookToLibrary(book5);
-    displayBooks();
+    displayBooks();*/
   };
