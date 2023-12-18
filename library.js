@@ -1,7 +1,7 @@
 const myLibrary = [];
+let libraryCounter = 0; 
 
 const bookContainer = document.querySelector(".book-container");
-
 
 function Book(title,author,pages,readStatus){
     this.title = title;
@@ -24,7 +24,7 @@ function displayBooks(){
         const card = document.createElement('div');
         card.style.width = "250px";
         card.style.height = "250px";
-        card.classList.add("card"); //maybe add i index to keep track?
+        card.classList.add("card","card-"+i); //maybe add i index to keep track?
         
         const titleText = document.createElement('div');
         titleText.textContent = "Title: " + curBook.title;
@@ -58,12 +58,39 @@ function displayBooks(){
         card.append(btnContainer);
 
         bookContainer.append(card);
+
+        const allDeleteBtns = Array.from(document.querySelectorAll('.delete-btn'));
+        for(const deleteButton of allDeleteBtns){
+          deleteButton.addEventListener('click', () => {
+            let arrayIndex = deleteButton.parentElement.parentElement.className.replace(/\D/g, ''); //only getting the array index number
+            myLibrary.splice(arrayIndex, 1);
+            while (bookContainer.firstChild) {
+              bookContainer.removeChild(bookContainer.lastChild);
+            }
+            displayBooks();
+          })
+        }
+
+        const allToggleBtns = Array.from(document.querySelectorAll('.toggle-btn'));
+        for(const toggleButton of allToggleBtns){
+          toggleBtn.addEventListener('click', () => {
+            let arrayIndex = toggleBtn.parentElement.parentElement.className.replace(/\D/g, ''); //only getting the array index number
+            let currentBook = myLibrary[arrayIndex];
+            if (currentBook.readStatus == "I have not been read"){
+              currentBook.readStatus = "I have been read";
+            }else{
+              currentBook.readStatus = "I have not been read";
+            }
+
+            while (bookContainer.firstChild) {
+              bookContainer.removeChild(bookContainer.lastChild);
+            }
+            displayBooks();
+          })
+        }
     }
 }
 
-const deleteButtons = document.querySelectorAll('.delete-btn');
-
-const allDeleteBtns = Array.from(document.querySelectorAll('.delete-btn'));
 
 
 //Button to open book info form
@@ -81,8 +108,8 @@ exitButton.addEventListener('click', () =>{
 })
 
 //Adding a book to library button
-const submitButton = document.querySelector("#submit-button");
-submitButton.addEventListener('click', (event) => {
+const formm = document.querySelector("form");
+formm.addEventListener("submit", (event) => {
   event.preventDefault();
   const titleInfo = document.querySelector("#title").value;
   const authorInfo = document.querySelector("#author").value;
@@ -94,6 +121,7 @@ submitButton.addEventListener('click', (event) => {
     readStatus = "I have not been read";
   }
   const newBook = new Book(titleInfo,authorInfo,numPages,readStatus);
+  libraryCounter++;
   addBookToLibrary(newBook);
   while (bookContainer.firstChild) {
     bookContainer.removeChild(bookContainer.lastChild);
@@ -104,17 +132,5 @@ submitButton.addEventListener('click', (event) => {
 })
 
 window.onload = (event) => {
-    /*
-    const book1 = new Book("Ant Farm Test", "Nathan Wells",100,"Read");
-    const book2 = new Book("Pig Farm", "Jack Wells",150,"Read");
-    const book3 = new Book("Dog Farm", "Heir Wells",10,"Not Read");
-    const book4 = new Book("Dog Farm", "Heir Wells",10,"Not Read");
-    const book5 = new Book("Dog Farm", "Heir Wells",10,"Not Read");
-  
-    addBookToLibrary(book1);
-    addBookToLibrary(book2);
-    addBookToLibrary(book3);
-    addBookToLibrary(book4);
-    addBookToLibrary(book5);
-    displayBooks();*/
+    libraryCounter = 0; 
   };
